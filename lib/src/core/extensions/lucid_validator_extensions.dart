@@ -18,11 +18,11 @@ extension LucidValidatorExtensions<T extends Object> on LucidValidator<T> {
 
 extension CustomValidPasswordValidator on SimpleValidationBuilder<String> {
   SimpleValidationBuilder<String> customValidPassword() {
-    return notEmpty()
-        .minLength(8)
-        .mustHaveLowercase()
-        .mustHaveUppercase()
-        .mustHaveNumber()
-        .mustHaveSpecialCharacter();
+    return notEmpty(message: "A senha não pode estar vazia") //
+        .minLength(8, message: "A senha deve ter no mínimo 8 caracteres");
+    // .mustHaveLowercase(message: "A senha deve ter pelo menos uma letra minúscula")
+    // .mustHaveUppercase(message: "A senha deve ter pelo menos uma letra maiúscula")
+    // .mustHaveNumber(message: "A senha deve ter pelo menos um número")
+    // .mustHaveSpecialCharacter(message: "A senha deve ter pelo menos um caractere especial");
   }
 }

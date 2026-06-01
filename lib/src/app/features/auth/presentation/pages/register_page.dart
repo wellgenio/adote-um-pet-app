@@ -24,8 +24,9 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   MaskedTextController numberController = MaskedTextController(mask: '(00) 00000-0000');
   MaskedTextController cepController = MaskedTextController(mask: '00000-000');
+  MaskedTextController cnpjController = MaskedTextController(mask: '00.000.000/0000-00');
 
-  final _registerParams = RegisterParams.empty();
+  late final _registerParams = RegisterParams.empty()..setUserType(widget.typeUser);
   final _validator = RegisterParamsValidator();
 
   final formKey = GlobalKey<FormState>();
@@ -97,18 +98,42 @@ class _RegisterPageState extends State<RegisterPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Cadastro',
+                  _registerParams.isIndividual ? 'Cadastro Pessoa Física' : 'Cadastro Organização',
                   style: theme.textTheme.displaySmall,
                 ),
                 const Gap(29),
+
+                // Campos básicos (comuns a ambos)
                 TextInputDs(
-                  label: 'nome',
+                  label: _registerParams.isOrganization ? 'nome da organização' : 'nome',
                   width: size.width,
-                  onChanged: _registerParams.setName,
+                  onChanged: _registerParams.isOrganization ? _registerParams.setOrganizationName : _registerParams.setName,
                   validator: _validator.byField(_registerParams, 'name'),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
                 const Gap(25),
+
+                // Campos específicos para organizações
+                if (_registerParams.isOrganization) ...[
+                  TextInputDs(
+                    label: 'CNPJ',
+                    controller: cnpjController,
+                    width: size.width,
+                    onChanged: _registerParams.setCnpj,
+                    validator: _validator.byField(_registerParams, 'cnpj'),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                  const Gap(25),
+                  TextInputDs(
+                    label: 'nome do responsável',
+                    width: size.width,
+                    onChanged: _registerParams.setResponsibleName,
+                    validator: _validator.byField(_registerParams, 'responsibleName'),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                  const Gap(25),
+                ],
+
                 TextInputDs(
                   label: 'e-mail',
                   textInputType: TextInputType.emailAddress,
@@ -137,7 +162,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const Gap(25),
                 TextInputDs(
-                  label: 'telefone',
+                  label: 'telefone (opcional)',
                   controller: numberController,
                   textInputType: TextInputType.number,
                   width: size.width,
@@ -145,9 +170,69 @@ class _RegisterPageState extends State<RegisterPage> {
                   validator: _validator.byField(_registerParams, 'phone'),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
+
+                // Campos específicos para organizações
+                if (_registerParams.isOrganization) ...[
+                  const Gap(25),
+                  TextInputDs(
+                    label: 'declaração de missão (opcional)',
+                    //maxLines: 3,
+                    width: size.width,
+                    onChanged: _registerParams.setMissionStatement,
+                    validator: _validator.byField(_registerParams, 'missionStatement'),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                  const Gap(25),
+                  TextInputDs(
+                    label: 'website (opcional)',
+                    width: size.width,
+                    onChanged: _registerParams.setWebsite,
+                    validator: _validator.byField(_registerParams, 'website'),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                  const Gap(25),
+                  Text(
+                    'Redes Sociais (opcional)',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Gap(15),
+                  TextInputDs(
+                    label: 'Facebook',
+                    width: size.width,
+                    onChanged: _registerParams.setFacebook,
+                    validator: _validator.byField(_registerParams, 'facebook'),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                  const Gap(15),
+                  TextInputDs(
+                    label: 'Instagram',
+                    width: size.width,
+                    onChanged: _registerParams.setInstagram,
+                    validator: _validator.byField(_registerParams, 'instagram'),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                  const Gap(15),
+                  TextInputDs(
+                    label: 'Twitter',
+                    width: size.width,
+                    onChanged: _registerParams.setTwitter,
+                    validator: _validator.byField(_registerParams, 'twitter'),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                ],
+
                 const Gap(25),
+                Text(
+                  'Endereço (opcional)',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const Gap(15),
                 TextInputDs(
-                  label: 'cep',
+                  label: 'CEP',
                   controller: cepController,
                   textInputType: TextInputType.number,
                   width: size.width,
@@ -155,16 +240,23 @@ class _RegisterPageState extends State<RegisterPage> {
                   validator: _validator.byField(_registerParams, 'zipCode'),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
-                const Gap(25),
+                const Gap(15),
                 TextInputDs(
-                  label: 'Endereço',
-                  textInputType: TextInputType.number,
+                  label: 'Rua',
                   width: size.width,
-                  onChanged: _registerParams.setAddress,
-                  validator: _validator.byField(_registerParams, 'address'),
+                  onChanged: _registerParams.setStreet,
+                  validator: _validator.byField(_registerParams, 'street'),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
-                const Gap(25),
+                const Gap(15),
+                TextInputDs(
+                  label: 'Bairro',
+                  width: size.width,
+                  onChanged: _registerParams.setNeighborhood,
+                  validator: _validator.byField(_registerParams, 'neighborhood'),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                ),
+                const Gap(15),
                 Row(
                   children: [
                     TextInputDs(
@@ -172,17 +264,41 @@ class _RegisterPageState extends State<RegisterPage> {
                       textInputType: TextInputType.number,
                       width: size.width * 0.3,
                       onChanged: _registerParams.setNumberHouse,
-                      validator: _validator.byField(_registerParams, 'number'),
+                      validator: _validator.byField(_registerParams, 'numberHouse'),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     const Gap(10),
                     Flexible(
                       child: TextInputDs(
                         label: 'Complemento',
-                        textInputType: TextInputType.number,
                         width: size.width * 0.59,
                         onChanged: _registerParams.setComplement,
                         validator: _validator.byField(_registerParams, 'complement'),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                      ),
+                    ),
+                  ],
+                ),
+                const Gap(15),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextInputDs(
+                        label: 'Cidade',
+                        width: size.width * 0.6,
+                        onChanged: _registerParams.setCity,
+                        validator: _validator.byField(_registerParams, 'city'),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                      ),
+                    ),
+                    const Gap(10),
+                    SizedBox(
+                      width: size.width * 0.25,
+                      child: TextInputDs(
+                        label: 'Estado',
+                        width: size.width * 0.25,
+                        onChanged: _registerParams.setState,
+                        validator: _validator.byField(_registerParams, 'state'),
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                       ),
                     ),

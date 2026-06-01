@@ -1,0 +1,2 @@
+/Users/rodrigo.castro/Documents/code/flutter/adote-um-pet-app/android/app/.cxx/Debug/3j4r2z2d/x86/CMakeFiles/edit_cache.dir
+/Users/rodrigo.castro/Documents/code/flutter/adote-um-pet-app/android/app/.cxx/Debug/3j4r2z2d/x86/CMakeFiles/rebuild_cache.dir

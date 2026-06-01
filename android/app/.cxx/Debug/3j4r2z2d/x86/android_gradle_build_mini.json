@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/rodrigo.castro/fvm/versions/stable/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/rodrigo.castro/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/rodrigo.castro/Documents/code/flutter/adote-um-pet-app/android/app/.cxx/Debug/3j4r2z2d/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/rodrigo.castro/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/rodrigo.castro/Documents/code/flutter/adote-um-pet-app/android/app/.cxx/Debug/3j4r2z2d/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

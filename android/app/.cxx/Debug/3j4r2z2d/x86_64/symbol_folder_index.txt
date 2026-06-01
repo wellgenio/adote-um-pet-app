@@ -1,0 +1,1 @@
+/Users/rodrigo.castro/Documents/code/flutter/adote-um-pet-app/build/app/intermediates/cxx/Debug/3j4r2z2d/obj/x86_64
