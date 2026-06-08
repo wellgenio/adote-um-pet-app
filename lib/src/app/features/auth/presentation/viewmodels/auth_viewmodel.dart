@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:result_dart/result_dart.dart';
+import 'package:signal_form/signal_form.dart';
 
 import '../../../../../core/client_http/app_response.dart';
 import '../../../../../core/command/command.dart';
@@ -19,6 +21,17 @@ class AuthViewmodel {
     signUpCommand = Command1(_signUpAuth);
     loginCommand = Command1(_loginUsecase.call);
   }
+
+  final isPasswordVisible = ValueNotifier(false);
+
+  late final form = formCtrl(() => (
+        email: Field<String>('email')
+            .required(message: 'O e-mail não pode estar vazio')
+            .email(message: 'O e-mail informado é inválido'),
+        password: Field<String>('password')
+            .required(message: 'A senha não pode estar vazia')
+            .minLength(8, message: 'A senha deve ter no mínimo 8 caracteres'),
+      ));
 
   late final Command1<AppResponse<AuthEntity>, RegisterParams> signUpCommand;
   late final Command1<AppResponse<AuthEntity>, LoginParams> loginCommand;
